@@ -1,8 +1,8 @@
 import java.util.Random;
 
 public class Customer implements Runnable {
-    String name;
-    Restaurant rest;
+    private final String name;
+    private final Restaurant rest;
 
 
     public Customer(Restaurant rest, String name) {

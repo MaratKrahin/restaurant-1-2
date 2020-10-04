@@ -1,6 +1,6 @@
 public class Cook implements Runnable {
-    String name;
-    Restaurant rest;
+    private String name;
+    private Restaurant rest;
 
     public Cook(Restaurant rest, String name) {
         this.name = name;

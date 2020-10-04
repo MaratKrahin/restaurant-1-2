@@ -1,7 +1,7 @@
 public class Waiter implements Runnable {
 
-    String name;
-    Restaurant rest;
+   private final String name;
+    private final Restaurant rest;
 
 
     public Waiter(Restaurant rest, String name) {
