@@ -16,16 +16,16 @@ public class Customer implements Runnable {
 
     public void run() {
         try {
-            Thread.sleep(new Random().nextInt(3000) + 1000);
+            Thread.sleep(new Random().nextInt(10000) + 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         System.out.printf("Посетитель %s вошел в ресторан \n", this.getName());
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//         //   Thread.sleep(new Random().nextInt(10000) + 5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         order(this);
     }
 

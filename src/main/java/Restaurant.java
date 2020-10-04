@@ -8,45 +8,56 @@ public class Restaurant {
     private final Queue<Order> ordersToCook = new ArrayDeque<>();
     private final AtomicInteger income = new AtomicInteger();
 
+    private final Object firstLock = new Object();
+    private final Object secondLock = new Object();
+
     public AtomicInteger getIncome() {
         return income;
     }
 
-    public synchronized void createOrder(Order order) {
-        orders.add(order);
-        notifyAll();
-    }
-
-    public synchronized Order getOrder() {
-        Order order = orders.poll();
-        if (order != null) {
-            return order;
-        } else {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return orders.poll();
+    public void createOrder(Order order) {
+        synchronized (firstLock) {
+            orders.add(order);
+            firstLock.notify();
         }
     }
 
-    public synchronized void orderToCook(Order order) {
-        ordersToCook.add(order);
-        notifyAll();
+    public synchronized Order getOrder() {
+        synchronized (firstLock) {
+            Order order = orders.poll();
+            if (order != null) {
+                return order;
+            } else {
+                try {
+                    firstLock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return orders.poll();
+            }
+        }
     }
 
-    public synchronized Order getOrderToCook() {
-        Order order = ordersToCook.poll();
-        if (order != null) {
-            return order;
-        } else {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    public void orderToCook(Order order) {
+        synchronized (secondLock) {
+            ordersToCook.add(order);
+            secondLock.notify();
+        }
+    }
+
+    public Order getOrderToCook() {
+        synchronized (secondLock) {
+            Order order = ordersToCook.poll();
+            if (order != null) {
+                return order;
+            } else {
+                try {
+                    secondLock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return ordersToCook.poll();
             }
-            return ordersToCook.poll();
         }
     }
 
